@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication Skills for Engineers — VTU</title>
+
+<!-- Helvetica — one typeface for the whole deck (system font, per request) -->
+
+<style>
+/* ===========================================
+   THEME — Yogabar register
+   =========================================== */
+:root{
+  --ink:#1A1A1A;          /* near-black type */
+  --ink-2:#262626;        /* dark stat card */
+  --grey:#505050;         /* mid stat card  */
+  --mute:#979797;         /* light stat card */
+  --royal:#3062DC;        /* hero accent    */
+  --royal-soft:#EAF0FF;   /* accent tint    */
+  --line:#E6E6E6;         /* hairlines      */
+  --paper:#FFFFFF;
+  --paper-2:#FAFAFB;
+  --stage-bg:#EDEEF0;
+  --slide-bg:#FFFFFF;
+
+  --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --dur:0.6s;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* --- viewport-base.css (fixed 16:9 stage, mandatory) --- */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg,#fff);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide-bg,#fff);}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+img,video,canvas,svg{max-width:100%;max-height:100%;}
+.deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;}
+@media print{
+  html,body{width:1920px;height:auto;overflow:visible;background:#fff;}
+  .deck-viewport{position:static;overflow:visible;background:#fff;}
+  .deck-stage{position:static;width:auto;height:auto;transform:none!important;background:none;}
+  .slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:1920px;height:1080px;break-after:page;page-break-after:always;}
+  .slide:last-child{break-after:auto;page-break-after:auto;}
+  .deck-controls{display:none!important;}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important;}}
+
+/* ===========================================
+   TYPE + SHARED SLIDE FURNITURE
+   Secondary / body tier is set a step larger than
+   the base Yogabar register, per request.
+   =========================================== */
+.slide{font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased;}
+.pad{position:absolute;inset:0;padding:92px 120px 92px;display:flex;flex-direction:column;}
+
+.eyebrow{font-size:23px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--royal);}
+.dash{width:56px;height:3px;background:var(--ink);margin:22px 0 0;border-radius:2px;}
+h2.s-title{font-size:66px;line-height:1.03;font-weight:600;letter-spacing:-.015em;margin-top:14px;max-width:1400px;}
+.lede{font-size:33px;font-weight:400;color:var(--grey);margin-top:20px;max-width:1240px;line-height:1.5;}
+
+/* two-line brand mark, top-right of every slide (VTU seal) */
+.brandmark{position:absolute;top:50px;right:120px;display:flex;align-items:center;gap:15px;z-index:5;}
+.brandmark img{width:64px;height:64px;object-fit:contain;flex:0 0 auto;}
+.brandmark .bm-txt{font-size:17px;line-height:1.26;font-weight:600;color:var(--ink);text-align:right;letter-spacing:.01em;}
+.brandmark .bm-txt span{display:block;font-weight:400;color:var(--mute);font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-top:2px;}
+
+/* footer mark + page number */
+.foot{position:absolute;left:120px;right:120px;bottom:46px;display:flex;align-items:center;justify-content:space-between;}
+.foot .fdash{display:flex;align-items:center;gap:16px;font-size:16px;color:var(--mute);letter-spacing:.14em;text-transform:uppercase;font-weight:500;}
+.foot .fdash::before{content:"";width:36px;height:2px;background:var(--ink);display:inline-block;}
+.foot .pnum{font-size:16px;color:var(--mute);font-weight:500;letter-spacing:.1em;}
+
+/* ===========================================
+   STAT CARDS (royal / ink / grey / mute)
+   min-height flexes to content — cards grow to fit.
+   =========================================== */
+.stat-grid{display:grid;gap:24px;}
+.stat{border-radius:24px;padding:38px 36px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;min-height:236px;position:relative;overflow:hidden;}
+.stat.royal{background:var(--royal);}
+.stat.ink{background:var(--ink-2);}
+.stat.grey{background:var(--grey);}
+.stat.mute{background:var(--mute);}
+.stat .num{font-size:64px;font-weight:300;line-height:1;letter-spacing:-.02em;}
+.stat .num svg{width:58px;height:58px;color:#fff;display:block;}
+.stat .k{font-size:27px;font-weight:600;margin-top:auto;}
+.stat .d{font-size:23px;font-weight:400;color:rgba(255,255,255,.86);margin-top:10px;line-height:1.46;}
+
+/* white content card */
+.card{background:var(--paper);border:1.5px solid var(--line);border-radius:22px;padding:34px 34px;display:flex;flex-direction:column;}
+.card .idx{font-size:22px;font-weight:600;color:var(--royal);letter-spacing:.05em;}
+.card h4{font-size:29px;font-weight:600;margin-top:12px;letter-spacing:-.01em;}
+.card p{font-size:23px;font-weight:400;color:var(--grey);margin-top:10px;line-height:1.5;}
+
+/* small blue tint panel */
+.panel{background:var(--royal-soft);border-radius:22px;padding:34px 36px;}
+.panel .plabel{font-size:20px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--royal);}
+
+.ul{list-style:none;display:flex;flex-direction:column;gap:16px;margin-top:20px;}
+.ul li{position:relative;padding-left:34px;font-size:25px;line-height:1.46;color:var(--ink);font-weight:400;}
+.ul li::before{content:"";position:absolute;left:0;top:12px;width:14px;height:14px;border-radius:50%;background:var(--royal);}
+.ul.tick li::before{content:"";width:20px;height:11px;border:3px solid var(--royal);border-top:0;border-right:0;transform:rotate(-45deg);border-radius:0;background:none;top:7px;}
+.ul.tick-white li::before{border-color:#fff;}
+
+/* ===========================================
+   REVEAL ANIMATION
+   =========================================== */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);}
+.slide.visible .reveal{opacity:1;transform:translateY(0);}
+.slide.visible .reveal.d1{transition-delay:.08s}
+.slide.visible .reveal.d2{transition-delay:.16s}
+.slide.visible .reveal.d3{transition-delay:.24s}
+.slide.visible .reveal.d4{transition-delay:.32s}
+.slide.visible .reveal.d5{transition-delay:.40s}
+.slide.visible .reveal.d6{transition-delay:.48s}
+.slide.visible .reveal.d7{transition-delay:.56s}
+
+/* ===========================================
+   COVER
+   =========================================== */
+.cover{padding:0;}
+.cover .strip{position:absolute;left:0;top:0;bottom:0;width:150px;background:linear-gradient(180deg,#2C4FA2 0%,#7C94CD 100%);}
+.cover .cwrap{position:absolute;inset:0;padding:120px 130px 110px 250px;display:flex;flex-direction:column;}
+.cover .kicker{font-size:23px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--royal);}
+.cover h1{font-size:132px;line-height:.94;font-weight:600;letter-spacing:-.03em;margin-top:26px;}
+.cover h1 .accent{color:var(--royal);}
+.cover .sub{font-size:40px;font-weight:500;color:var(--ink);margin-top:30px;letter-spacing:-.01em;}
+.cover .desc{font-size:26px;font-weight:400;color:var(--grey);margin-top:24px;max-width:1120px;line-height:1.55;}
+.cover .cvfoot{margin-top:auto;display:flex;align-items:center;gap:26px;}
+.cover .cvfoot img{width:112px;height:112px;object-fit:contain;}
+.cover .cvfoot .cvt{font-size:23px;font-weight:600;line-height:1.35;}
+.cover .cvfoot .cvt span{display:block;font-weight:400;color:var(--mute);font-size:18px;margin-top:4px;}
+.cover .cbadge{position:absolute;top:120px;right:130px;text-align:right;font-size:18px;color:var(--mute);letter-spacing:.06em;line-height:1.5;}
+
+/* process flow */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:12px;}
+.flow .node{flex:1;background:var(--paper);border:1.5px solid var(--line);border-radius:22px;padding:30px 24px;display:flex;flex-direction:column;position:relative;}
+.flow .node .fn{width:52px;height:52px;border-radius:50%;background:var(--royal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;}
+.flow .node h4{font-size:27px;font-weight:600;margin-top:20px;}
+.flow .node p{font-size:22px;color:var(--grey);margin-top:9px;line-height:1.45;}
+.flow .arw{display:flex;align-items:center;justify-content:center;width:44px;flex:0 0 44px;color:var(--mute);font-size:34px;font-weight:300;}
+.noise{margin-top:26px;background:var(--ink-2);border-radius:22px;padding:28px 36px;display:flex;gap:26px;align-items:center;color:#fff;}
+.noise .nt{font-size:21px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--royal);padding:12px 22px;border-radius:14px;white-space:nowrap;}
+.noise p{font-size:24px;color:rgba(255,255,255,.88);line-height:1.5;}
+
+/* agenda list */
+.agenda{display:grid;grid-template-columns:1fr 1fr;gap:20px 70px;margin-top:8px;}
+.ag{display:flex;gap:22px;align-items:flex-start;padding:15px 0;border-top:1.5px solid var(--line);}
+.ag .agn{font-size:27px;font-weight:600;color:var(--royal);min-width:44px;}
+.ag h4{font-size:27px;font-weight:600;}
+.ag p{font-size:21px;color:var(--grey);margin-top:4px;}
+
+/* before / after block */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px;}
+.ba .box{border-radius:22px;padding:32px 34px;}
+.ba .before{background:var(--paper-2);border:1.5px dashed var(--mute);}
+.ba .after{background:var(--royal);color:#fff;}
+.ba .lbl{font-size:19px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;}
+.ba .before .lbl{color:var(--mute);}
+.ba .after .lbl{color:rgba(255,255,255,.85);}
+.ba q{display:block;font-size:31px;line-height:1.5;margin-top:18px;font-weight:500;}
+.ba .before q{color:var(--grey);}
+
+/* chips (non-verbal signals) */
+.chips{display:flex;flex-wrap:wrap;gap:16px;margin-top:4px;}
+.chip{background:var(--royal-soft);color:var(--royal);border-radius:16px;padding:17px 30px;font-size:26px;font-weight:600;}
+
+/* two-column generic */
+.cols{display:grid;gap:44px;flex:1;min-height:0;}
+
+/* quote mark */
+.bigquote{font-size:34px;font-weight:600;color:var(--royal);line-height:1.4;letter-spacing:-.01em;}
+
+/* keyword rows */
+.kw{display:flex;flex-direction:column;gap:0;}
+.kw .kwrow{display:flex;gap:16px;padding:16px 0;border-top:1.5px solid var(--line);font-size:24px;line-height:1.4;}
+.kw .kwrow b{color:var(--royal);min-width:210px;font-weight:600;}
+.kw .kwrow span{color:var(--grey);}
+
+/* activity step timeline */
+.tl{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+.tl .row{display:grid;grid-template-columns:70px 1fr;gap:22px;align-items:stretch;}
+.tl .time{background:var(--royal);color:#fff;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;}
+.tl .time b{font-size:30px;font-weight:600;line-height:1;}
+.tl .row:nth-child(even) .time{background:var(--ink-2);}
+.tl .body{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:14px 26px;display:flex;flex-direction:column;justify-content:center;}
+.tl .body h4{font-size:24px;font-weight:600;}
+.tl .body p{font-size:21px;color:var(--grey);margin-top:5px;line-height:1.4;}
+
+/* conclusion closing highlight */
+.closing{background:var(--royal);color:#fff;border-radius:22px;padding:30px 38px;margin-top:26px;}
+.closing b{display:block;font-size:29px;font-weight:600;line-height:1.4;}
+.closing span{display:block;font-size:25px;color:rgba(255,255,255,.88);margin-top:8px;line-height:1.45;}
+.srcline{margin-top:22px;font-size:20px;color:var(--mute);border-top:1.5px solid var(--line);padding-top:18px;}
+
+/* edit affordance */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer;}
+.edit-toggle{position:fixed;top:16px;left:16px;width:52px;height:52px;border-radius:50%;border:none;background:var(--royal);color:#fff;font-size:22px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10001;box-shadow:0 6px 20px rgba(48,98,220,.4);}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto;}
+.edit-toggle.active{background:#1a1a1a;}
+[contenteditable="true"]{outline:2px dashed var(--royal);outline-offset:4px;border-radius:4px;cursor:text;}
+
+/* nav */
+.deck-controls{display:flex;align-items:center;gap:18px;background:rgba(26,26,26,.9);padding:10px 18px;border-radius:100px;backdrop-filter:blur(6px);}
+.deck-controls button{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.deck-controls button:hover{background:rgba(255,255,255,.18);}
+.deck-controls .count{color:#fff;font-size:15px;font-weight:500;letter-spacing:.08em;min-width:56px;text-align:center;}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--royal);z-index:1000;transition:width .4s var(--ease);}
+
+/* ===========================================
+   ANIMATED VECTOR ICONS (inline SVG — loop like a GIF, stay crisp)
+   All out-of-flow (absolute) so they never affect card layout.
+   =========================================== */
+.stat .ico{position:absolute;top:30px;right:30px;width:50px;height:50px;color:#fff;opacity:.92;pointer-events:none;}
+.card{position:relative;}
+.card .ico{position:absolute;top:32px;right:30px;width:48px;height:48px;color:var(--royal);opacity:.9;pointer-events:none;}
+.closing{position:relative;}
+.closing .ico{position:absolute;top:22px;right:24px;width:44px;height:44px;color:#fff;opacity:.92;pointer-events:none;}
+.deco{position:absolute;pointer-events:none;z-index:0;}
+.hero-comm{position:absolute;right:150px;top:50%;transform:translateY(-50%);width:440px;height:440px;z-index:1;pointer-events:none;}
+/* communication-process node signal pulse */
+.flow .node .fn{position:relative;}
+.flow .node .fn::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid var(--royal);opacity:0;animation:fnpulse 2.6s ease-out infinite;}
+.flow .node:nth-child(3) .fn::after{animation-delay:.5s}
+.flow .node:nth-child(5) .fn::after{animation-delay:1s}
+.flow .node:nth-child(7) .fn::after{animation-delay:1.5s}
+.flow .node:nth-child(9) .fn::after{animation-delay:2s}
+@keyframes fnpulse{0%{transform:scale(.7);opacity:.55}70%{opacity:0}100%{transform:scale(1.55);opacity:0}}
+</style>
+</head>
+<body>
+
+<!-- ===== Animated vector icon sprite (looping SMIL, currentColor) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-speech" viewBox="0 0 64 64">
+    <path d="M12 15h40a6 6 0 0 1 6 6v16a6 6 0 0 1-6 6H30l-11 9v-9h-7a6 6 0 0 1-6-6V21a6 6 0 0 1 6-6Z" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linejoin="round"/>
+    <circle cx="22" cy="29" r="2.6" fill="currentColor"><animate attributeName="opacity" values=".2;1;.2" dur="1.4s" begin="0s" repeatCount="indefinite"/></circle>
+    <circle cx="32" cy="29" r="2.6" fill="currentColor"><animate attributeName="opacity" values=".2;1;.2" dur="1.4s" begin=".2s" repeatCount="indefinite"/></circle>
+    <circle cx="42" cy="29" r="2.6" fill="currentColor"><animate attributeName="opacity" values=".2;1;.2" dur="1.4s" begin=".4s" repeatCount="indefinite"/></circle>
+  </symbol>
+  <symbol id="i-eye" viewBox="0 0 64 64">
+    <path d="M6 32C14 20 26 16 32 16s18 4 26 16c-8 12-20 16-26 16S14 44 6 32Z" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linejoin="round"/>
+    <circle cx="32" cy="32" r="7" fill="currentColor"><animate attributeName="cx" values="27;37;27" dur="3.2s" calcMode="spline" keyTimes="0;.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" repeatCount="indefinite"/></circle>
+  </symbol>
+  <symbol id="i-chart" viewBox="0 0 64 64">
+    <g fill="currentColor">
+      <rect x="12" y="20" width="9" height="28" rx="2"><animate attributeName="height" values="10;28;10" dur="1.8s" begin="0s" repeatCount="indefinite"/><animate attributeName="y" values="38;20;38" dur="1.8s" begin="0s" repeatCount="indefinite"/></rect>
+      <rect x="27" y="14" width="9" height="34" rx="2"><animate attributeName="height" values="18;34;18" dur="1.8s" begin=".3s" repeatCount="indefinite"/><animate attributeName="y" values="30;14;30" dur="1.8s" begin=".3s" repeatCount="indefinite"/></rect>
+      <rect x="42" y="26" width="9" height="22" rx="2"><animate attributeName="height" values="8;22;8" dur="1.8s" begin=".6s" repeatCount="indefinite"/><animate attributeName="y" values="40;26;40" dur="1.8s" begin=".6s" repeatCount="indefinite"/></rect>
+    </g>
+    <line x1="8" y1="50" x2="56" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  </symbol>
+  <symbol id="i-doc" viewBox="0 0 64 64">
+    <path d="M18 8h20l12 12v34a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M38 8v12h12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>
+    <g stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="24">
+      <line x1="23" y1="32" x2="45" y2="32"><animate attributeName="stroke-dashoffset" values="24;0;0;24" keyTimes="0;.4;.85;1" dur="3.6s" repeatCount="indefinite"/></line>
+      <line x1="23" y1="40" x2="45" y2="40"><animate attributeName="stroke-dashoffset" values="24;24;0;0;24" keyTimes="0;.15;.5;.85;1" dur="3.6s" repeatCount="indefinite"/></line>
+      <line x1="23" y1="48" x2="38" y2="48" stroke-dasharray="16"><animate attributeName="stroke-dashoffset" values="16;16;0;0;16" keyTimes="0;.35;.65;.85;1" dur="3.6s" repeatCount="indefinite"/></line>
+    </g>
+  </symbol>
+  <symbol id="i-people" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+      <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -2;0 0" dur="2.4s" repeatCount="indefinite"/><circle cx="21" cy="25" r="8"/><path d="M7 51c0-8 6-13 14-13s14 5 14 13"/></g>
+      <g opacity=".85"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2;0 0" dur="2.4s" begin="1.2s" repeatCount="indefinite"/><circle cx="45" cy="27" r="7"/><path d="M33 51c0-7 5-12 12-12s12 5 12 12"/></g>
+    </g>
+  </symbol>
+  <symbol id="i-screen" viewBox="0 0 64 64">
+    <rect x="8" y="12" width="48" height="34" rx="4" fill="none" stroke="currentColor" stroke-width="3.4"/>
+    <path d="M26 54h12M32 46v8" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/>
+    <polyline points="16,38 26,28 34,34 48,20" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="70"><animate attributeName="stroke-dashoffset" values="70;0;0;70" keyTimes="0;.45;.85;1" dur="3.4s" repeatCount="indefinite"/></polyline>
+  </symbol>
+  <symbol id="i-network" viewBox="0 0 64 64">
+    <g stroke="currentColor" stroke-width="3" stroke-linecap="round">
+      <line x1="16" y1="20" x2="46" y2="16"><animate attributeName="opacity" values=".25;1;.25" dur="2s" begin="0s" repeatCount="indefinite"/></line>
+      <line x1="16" y1="20" x2="30" y2="46"><animate attributeName="opacity" values=".25;1;.25" dur="2s" begin=".5s" repeatCount="indefinite"/></line>
+      <line x1="46" y1="16" x2="48" y2="46"><animate attributeName="opacity" values=".25;1;.25" dur="2s" begin="1s" repeatCount="indefinite"/></line>
+      <line x1="30" y1="46" x2="48" y2="46"><animate attributeName="opacity" values=".25;1;.25" dur="2s" begin="1.5s" repeatCount="indefinite"/></line>
+    </g>
+    <g fill="currentColor">
+      <circle cx="16" cy="20" r="5.5"><animate attributeName="r" values="5;6.6;5" dur="2s" begin="0s" repeatCount="indefinite"/></circle>
+      <circle cx="46" cy="16" r="5.5"><animate attributeName="r" values="5;6.6;5" dur="2s" begin=".5s" repeatCount="indefinite"/></circle>
+      <circle cx="48" cy="46" r="5.5"><animate attributeName="r" values="5;6.6;5" dur="2s" begin="1s" repeatCount="indefinite"/></circle>
+      <circle cx="30" cy="46" r="5.5"><animate attributeName="r" values="5;6.6;5" dur="2s" begin="1.5s" repeatCount="indefinite"/></circle>
+    </g>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-dasharray="151"><animate attributeName="stroke-dashoffset" values="151;0;0;151" keyTimes="0;.25;.9;1" dur="5s" repeatCount="indefinite"/></circle>
+    <polyline points="21,33 29,41 44,24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="34"><animate attributeName="stroke-dashoffset" values="34;34;0;0;34" keyTimes="0;.2;.45;.9;1" dur="5s" repeatCount="indefinite"/></polyline>
+  </symbol>
+  <symbol id="i-bulb" viewBox="0 0 64 64">
+    <path d="M32 10a16 16 0 0 0-10 28c1.8 1.5 2.6 3 2.6 5.5h14.8c0-2.5.8-4 2.6-5.5A16 16 0 0 0 32 10Z" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M26 52h12M28 57h8" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M27 34q5 6 10 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><animate attributeName="opacity" values=".25;1;.25" dur="1.6s" repeatCount="indefinite"/></path>
+  </symbol>
+  <symbol id="i-spark" viewBox="0 0 64 64">
+    <path d="M30 8c1.6 11 7 16.4 18 18-11 1.6-16.4 7-18 18-1.6-11-7-16.4-18-18 11-1.6 16.4-7 18-18Z" fill="currentColor"><animate attributeName="opacity" values=".5;1;.5" dur="1.8s" repeatCount="indefinite"/></path>
+    <path d="M50 40c.7 4 2.4 5.6 6 6-3.6.7-5.3 2.4-6 6-.7-3.6-2.4-5.3-6-6 3.6-.7 5.3-2.4 6-6Z" fill="currentColor"><animate attributeName="opacity" values="1;.3;1" dur="1.8s" repeatCount="indefinite"/></path>
+  </symbol>
+  <symbol id="i-growth" viewBox="0 0 64 64">
+    <path d="M10 10v44h44" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" opacity=".55"/>
+    <polyline points="16,44 28,32 37,38 52,20" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="72"><animate attributeName="stroke-dashoffset" values="72;0;0;72" keyTimes="0;.45;.85;1" dur="3.4s" repeatCount="indefinite"/></polyline>
+    <path d="M44 20h8v8" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-pause" viewBox="0 0 64 64">
+    <rect x="20" y="16" width="8" height="32" rx="4" fill="currentColor"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" begin="0s" repeatCount="indefinite"/></rect>
+    <rect x="36" y="16" width="8" height="32" rx="4" fill="currentColor"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" begin=".3s" repeatCount="indefinite"/></rect>
+  </symbol>
+  <symbol id="i-volume" viewBox="0 0 64 64">
+    <path d="M10 26h10l14-11v34l-14-11H10Z" fill="currentColor"/>
+    <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round">
+      <path d="M42 24a12 12 0 0 1 0 16"><animate attributeName="opacity" values=".3;1;.3" dur="1.5s" begin="0s" repeatCount="indefinite"/></path>
+      <path d="M48 18a20 20 0 0 1 0 28"><animate attributeName="opacity" values=".3;1;.3" dur="1.5s" begin=".3s" repeatCount="indefinite"/></path>
+    </g>
+  </symbol>
+  <symbol id="i-scissors" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+      <animateTransform attributeName="transform" type="rotate" values="0 32 32;-6 32 32;0 32 32" dur="2.4s" repeatCount="indefinite"/>
+      <circle cx="16" cy="20" r="7"/><circle cx="16" cy="44" r="7"/>
+      <path d="M22 24 52 42"/><path d="M22 40 52 22"/>
+    </g>
+  </symbol>
+  <symbol id="i-timer" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="32" cy="37" r="20"/>
+      <path d="M26 8h12M32 8v8M50 22l4-4"/>
+      <line x1="32" y1="37" x2="32" y2="23"><animateTransform attributeName="transform" type="rotate" from="0 32 37" to="360 32 37" dur="3s" repeatCount="indefinite"/></line>
+    </g>
+  </symbol>
+  <symbol id="i-route" viewBox="0 0 64 64">
+    <path d="M10 50 Q22 20 32 34 T54 14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="3 7" opacity=".55"/>
+    <circle cx="10" cy="50" r="4.5" fill="currentColor"/>
+    <circle cx="54" cy="14" r="4.5" fill="currentColor"/>
+    <circle r="5.5" fill="currentColor"><animateMotion dur="3.6s" repeatCount="indefinite" path="M10 50 Q22 20 32 34 T54 14"/></circle>
+  </symbol>
+</defs></svg>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- ============ 1 · COVER ============ -->
+<section class="slide cover active">
+  <div class="strip"></div>
+  <div class="cbadge reveal d1">A complete guide for<br>engineering students</div>
+  <div class="cwrap">
+    <div class="kicker reveal d1">Visvesvaraya Technological University · Belagavi</div>
+    <h1 class="reveal d2">COMMUNICATION<br><span class="accent">SKILL</span></h1>
+    <div class="sub reveal d3">An Engineer's Most Underrated Tool</div>
+    <div class="desc reveal d4">A complete guide for engineering students — the theory, the types, the workplace applications, and hands-on practice to become a more effective communicator.</div>
+    <div class="cvfoot reveal d5">
+      <img src="assets/vtu-logo.png" alt="VTU logo">
+      <div class="cvt">Visvesvaraya Technological University<span>Communication Skills for Engineers</span></div>
+    </div>
+  </div>
+  <svg class="hero-comm" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+    <g stroke="#3062DC" stroke-width="2.5">
+      <circle cx="205" cy="200" r="55"><animate attributeName="r" values="55;150" dur="3s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0" dur="3s" begin="0s" repeatCount="indefinite"/></circle>
+      <circle cx="205" cy="200" r="55"><animate attributeName="r" values="55;150" dur="3s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0" dur="3s" begin="1s" repeatCount="indefinite"/></circle>
+      <circle cx="205" cy="200" r="55"><animate attributeName="r" values="55;150" dur="3s" begin="2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0" dur="3s" begin="2s" repeatCount="indefinite"/></circle>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -9;0 0" dur="4.5s" repeatCount="indefinite"/>
+      <rect x="132" y="158" width="146" height="86" rx="20" fill="#3062DC"/>
+      <path d="M156 240 L156 270 L184 242 Z" fill="#3062DC"/>
+      <circle cx="175" cy="201" r="8" fill="#fff"><animate attributeName="opacity" values=".3;1;.3" dur="1.4s" begin="0s" repeatCount="indefinite"/></circle>
+      <circle cx="205" cy="201" r="8" fill="#fff"><animate attributeName="opacity" values=".3;1;.3" dur="1.4s" begin=".2s" repeatCount="indefinite"/></circle>
+      <circle cx="235" cy="201" r="8" fill="#fff"><animate attributeName="opacity" values=".3;1;.3" dur="1.4s" begin=".4s" repeatCount="indefinite"/></circle>
+    </g>
+    <g fill="#7C94CD">
+      <circle cx="96" cy="120" r="13"><animate attributeName="cy" values="120;107;120" dur="3.6s" repeatCount="indefinite"/></circle>
+      <circle cx="318" cy="292" r="17"><animate attributeName="cy" values="292;305;292" dur="4.2s" repeatCount="indefinite"/></circle>
+    </g>
+  </svg>
+</section>
+
+<!-- ============ 2 · WHAT WE'LL COVER ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">Agenda</div>
+    <h2 class="s-title reveal d1">What We'll Cover</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Nine stops from theory to practice.</p>
+    <div class="agenda reveal d2" style="margin-top:34px;">
+      <div class="ag"><div class="agn">01</div><div><h4>What Is Communication?</h4><p>Definition and key words</p></div></div>
+      <div class="ag"><div class="agn">02</div><div><h4>The Communication Process</h4><p>Sender to receiver, and back</p></div></div>
+      <div class="ag"><div class="agn">03</div><div><h4>Why It Matters in Engineering</h4><p>Confidence, teams, business</p></div></div>
+      <div class="ag"><div class="agn">04</div><div><h4>Barriers to Communication</h4><p>What gets in the way</p></div></div>
+      <div class="ag"><div class="agn">05</div><div><h4>Four Types of Communication</h4><p>Verbal, non-verbal, visual, written</p></div></div>
+      <div class="ag"><div class="agn">06</div><div><h4>Verbal &amp; Non-Verbal Skills</h4><p>Voice, tone, body language</p></div></div>
+      <div class="ag"><div class="agn">07</div><div><h4>Visual &amp; Written Skills</h4><p>Diagrams, reports, documentation</p></div></div>
+      <div class="ag"><div class="agn">08</div><div><h4>Communication at Work</h4><p>Meetings, reports, presentations</p></div></div>
+      <div class="ag"><div class="agn">09</div><div><h4>Hands-On Activity</h4><p>Practice the 60-second pitch</p></div></div>
+    </div>
+  </div>
+  <svg class="deco" style="right:170px;bottom:120px;width:206px;height:150px;color:var(--royal);opacity:.8;" aria-hidden="true"><use href="#i-route"/></svg>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">01</div></div>
+</section>
+
+<!-- ============ 3 · WHAT IS COMMUNICATION ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">01 · Definition</div>
+    <h2 class="s-title reveal d1">What Is Communication?</h2>
+    <div class="dash reveal d1"></div>
+    <div class="cols reveal d2" style="grid-template-columns:1.15fr 1fr;margin-top:40px;align-items:start;">
+      <div>
+        <p style="font-size:29px;line-height:1.55;color:var(--ink);">Communication is the process of <b style="color:var(--royal);">sharing ideas and information</b> between people. It can be written or spoken, verbal or non-verbal, pictorial or graphic.</p>
+        <p style="font-size:29px;line-height:1.55;color:var(--grey);margin-top:22px;">It is a <b style="color:var(--ink);">continuous process</b> — and with today's technology, communication can be made simpler, faster, and more effective.</p>
+        <div class="panel" style="margin-top:30px;">
+          <div class="plabel">Why it matters</div>
+          <ul class="ul" style="margin-top:16px;">
+            <li>Good communication builds confidence. Poor communication leads to misunderstanding.</li>
+            <li>Engineers use communication to deliver information about their company, their products, and their ideas — to clients, teams, and employers.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="align-self:start;">
+        <div class="idx">KEY WORDS</div>
+        <div class="kw" style="margin-top:14px;">
+          <div class="kwrow"><b>Communication</b><span>Sharing ideas and information</span></div>
+          <div class="kwrow"><b>Skill</b><span>Ability to do something well</span></div>
+          <div class="kwrow"><b>Engineering</b><span>The study of being an engineer</span></div>
+          <div class="kwrow"><b>Field</b><span>A specific area of work</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <svg class="deco" style="right:205px;bottom:150px;width:176px;height:176px;color:var(--royal);opacity:.85;" aria-hidden="true"><use href="#i-network"/></svg>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">02</div></div>
+</section>
+
+<!-- ============ 4 · THE COMMUNICATION PROCESS ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">02 · The Process</div>
+    <h2 class="s-title reveal d1">The Communication Process</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Every message travels through five stages — and can be disrupted at any of them.</p>
+    <div class="flow reveal d2" style="margin-top:40px;">
+      <div class="node"><div class="fn">1</div><h4>Sender</h4><p>Has an idea to share</p></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="fn">2</div><h4>Message</h4><p>Encodes it into words or symbols</p></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="fn">3</div><h4>Channel</h4><p>Sends it — speech, text, visuals</p></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="fn">4</div><h4>Receiver</h4><p>Decodes and interprets it</p></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="fn">5</div><h4>Feedback</h4><p>Responds, confirming understanding</p></div>
+    </div>
+    <div class="noise reveal d3">
+      <div class="nt">Noise</div>
+      <p>Anything that distorts the message — physical noise, poor channel choice, language gaps, or emotional distraction — can disrupt any stage of this process.</p>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">03</div></div>
+</section>
+
+<!-- ============ 5 · WHY IT MATTERS ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">03 · Relevance</div>
+    <h2 class="s-title reveal d1">Why Communication Matters in Engineering</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Communication skill is essential in every field — and engineering is no exception.</p>
+    <div class="stat-grid reveal d2" style="grid-template-columns:repeat(4,1fr);margin-top:50px;">
+      <div class="stat royal"><svg class="ico"><use href="#i-bulb"/></svg><div class="num">01</div><div class="k">Understanding</div><div class="d">Allows people to understand information quickly and clearly.</div></div>
+      <div class="stat ink"><svg class="ico"><use href="#i-spark"/></svg><div class="num">02</div><div class="k">Confidence</div><div class="d">Good communication skills build confidence in the engineer.</div></div>
+      <div class="stat grey"><svg class="ico"><use href="#i-people"/></svg><div class="num">03</div><div class="k">Relationships</div><div class="d">Builds strong, healthy relationships with clients and teams.</div></div>
+      <div class="stat mute"><svg class="ico"><use href="#i-growth"/></svg><div class="num">04</div><div class="k">Business Growth</div><div class="d">Helps grow business, improve profit, and deliver on projects.</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">04</div></div>
+</section>
+
+<!-- ============ 6 · BARRIERS ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">04 · Barriers</div>
+    <h2 class="s-title reveal d1">Barriers to Effective Communication</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Recognizing these barriers is the first step to overcoming them.</p>
+    <div class="stat-grid reveal d2" style="grid-template-columns:repeat(3,1fr);margin-top:40px;">
+      <div class="card"><div class="idx">01</div><h4>Physical Noise</h4><p>Background sound, poor connections, or distance disrupt the message.</p></div>
+      <div class="card"><div class="idx">02</div><h4>Language Gaps</h4><p>Jargon, accents, or vocabulary differences cause confusion.</p></div>
+      <div class="card"><div class="idx">03</div><h4>Perceptual Differences</h4><p>People interpret the same message differently based on experience.</p></div>
+      <div class="card"><div class="idx">04</div><h4>Emotional Barriers</h4><p>Stress, anxiety, or mood can block a message from landing.</p></div>
+      <div class="card"><div class="idx">05</div><h4>Cultural Differences</h4><p>Norms around tone, directness, and gesture vary across cultures.</p></div>
+      <div class="card"><div class="idx">06</div><h4>Information Overload</h4><p>Too much detail at once causes key points to get lost.</p></div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">05</div></div>
+</section>
+
+<!-- ============ 7 · FOUR TYPES ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">05 · The Four Types</div>
+    <h2 class="s-title reveal d1">Four Types of Communication</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Every engineer relies on a mix of these to get ideas across effectively.</p>
+    <div class="stat-grid reveal d2" style="grid-template-columns:repeat(4,1fr);margin-top:50px;">
+      <div class="stat royal"><svg class="ico"><use href="#i-speech"/></svg><div class="num">01</div><div class="k">Verbal</div><div class="d">Spoken or written words used to convey a message. Builds relationships and trust with customers.</div></div>
+      <div class="stat ink"><svg class="ico"><use href="#i-eye"/></svg><div class="num">02</div><div class="k">Non-Verbal</div><div class="d">Eye contact, facial expressions, gestures, posture — signals sent without words.</div></div>
+      <div class="stat grey"><svg class="ico"><use href="#i-chart"/></svg><div class="num">03</div><div class="k">Visual</div><div class="d">GIFs, screenshots, videos, pie charts, infographics, and slide decks.</div></div>
+      <div class="stat mute"><svg class="ico"><use href="#i-doc"/></svg><div class="num">04</div><div class="k">Written</div><div class="d">Letters, circulars, manuals, reports, memos — a formal, less-flexible channel.</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">06</div></div>
+</section>
+
+<!-- ============ 8 · VERBAL ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">06 · Verbal</div>
+    <h2 class="s-title reveal d1">Verbal Communication</h2>
+    <div class="dash reveal d1"></div>
+    <div class="cols reveal d2" style="grid-template-columns:1fr 1fr;margin-top:36px;align-items:start;">
+      <div>
+        <p style="font-size:28px;line-height:1.55;color:var(--grey);">Using spoken or written words to convey our message or ideas. Effective verbal communication builds good relationships with customers and helps improve business.</p>
+        <div class="panel" style="margin-top:26px;">
+          <div class="plabel">Where engineers use it</div>
+          <ul class="ul" style="margin-top:16px;">
+            <li>Explaining a technical idea clearly to a non-technical client</li>
+            <li>Presenting project updates to a team or manager</li>
+            <li>Answering interview questions with confidence</li>
+            <li>Talking through a design decision in a review meeting</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="justify-content:space-between;height:100%;">
+        <svg class="ico"><use href="#i-speech"/></svg>
+        <div>
+          <div class="idx">VERBAL IS THE FRONT LINE</div>
+          <p style="font-size:25px;margin-top:16px;color:var(--ink);line-height:1.55;">Every engineer should understand the importance of communication skills in their field. Without it, it's difficult to build a good image for the company — engineers must actively improve their verbal communication.</p>
+        </div>
+        <div class="bigquote" style="margin-top:30px;">"Communication solves all the problems."</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">07</div></div>
+</section>
+
+<!-- ============ 9 · TIPS TO ENHANCE VERBAL ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">06 · Verbal Skills</div>
+    <h2 class="s-title reveal d1">Tips to Enhance Verbal Communication</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Six habits that make your spoken and written words land.</p>
+    <div class="stat-grid reveal d2" style="grid-template-columns:repeat(3,1fr);margin-top:40px;">
+      <div class="card"><div class="idx">01</div><h4>Voice Tone</h4><p>Vary your tone — a flat tone bores the listener; the right tone keeps them attentive.</p></div>
+      <div class="card"><div class="idx">02</div><h4>Clear &amp; Valid Information</h4><p>Understand the content as a listener and share information that is accurate.</p></div>
+      <div class="card"><div class="idx">03</div><h4>Attitude</h4><p>Keep a positive attitude while communicating — it helps build a strong team.</p></div>
+      <div class="card"><div class="idx">04</div><h4>Think Before Speaking</h4><p>Organize your information in advance so your words don't hurt others.</p></div>
+      <div class="card"><div class="idx">05</div><h4>Patience</h4><p>Listen carefully and avoid irritation — it prevents selfish decisions.</p></div>
+      <div class="card"><div class="idx">06</div><h4>Feedback</h4><p>Communication is two-way — give feedback immediately after.</p></div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">08</div></div>
+</section>
+
+<!-- ============ 10 · IMPACTFUL VERBAL ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">06 · Delivery</div>
+    <h2 class="s-title reveal d1">Making Verbal Communication Impactful</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Small delivery habits that make a big difference when you speak.</p>
+    <div class="stat-grid reveal d2" style="grid-template-columns:repeat(3,1fr);margin-top:36px;">
+      <div class="stat royal"><svg class="ico"><use href="#i-pause"/></svg><div class="num"><svg><use href="#i-pause"/></svg></div><div class="k">Use Pauses</div><div class="d">Replace filler words with a brief, confident pause. It gives you time to think and gives your words more weight.</div></div>
+      <div class="stat ink"><svg class="ico"><use href="#i-volume"/></svg><div class="num"><svg><use href="#i-volume"/></svg></div><div class="k">Vary Your Volume</div><div class="d">Speaking at different volumes keeps the listener engaged and highlights your key points.</div></div>
+      <div class="stat grey"><svg class="ico"><use href="#i-scissors"/></svg><div class="num"><svg><use href="#i-scissors"/></svg></div><div class="k">Cut the Fillers</div><div class="d">Swap "uh," "um," and "like" for silence — pauses sound far more confident than filler words.</div></div>
+    </div>
+    <div class="ba reveal d3" style="margin-top:26px;">
+      <div class="box before"><div class="lbl">Before</div><q>So, uh, the sensor, like, failed because, um, the voltage was, uh, too high.</q></div>
+      <div class="box after"><div class="lbl">After</div><q>The sensor failed — [pause] — because the voltage was too high.</q></div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">09</div></div>
+</section>
+
+<!-- ============ 11 · NON-VERBAL ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">06 · Non-Verbal</div>
+    <h2 class="s-title reveal d1">Body Language &amp; Non-Verbal Communication</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">The transmission of messages through eye contact, facial expressions, gestures, posture, and body language.</p>
+    <div class="chips reveal d2" style="margin-top:30px;">
+      <div class="chip">Facial Expression</div>
+      <div class="chip">Gestures</div>
+      <div class="chip">Eye Contact</div>
+      <div class="chip">Body Movement</div>
+    </div>
+    <div class="panel reveal d3" style="margin-top:28px;">
+      <div class="plabel">Tips for non-verbal communication</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 60px;margin-top:16px;">
+        <ul class="ul" style="margin-top:0;">
+          <li>Pay close attention — repeat back key points in the same words to show you care.</li>
+          <li>Maintain comfortable eye contact; fulfill their gaze without staring.</li>
+          <li>Keep an open body position — avoid crossing your arms.</li>
+        </ul>
+        <ul class="ul" style="margin-top:0;">
+          <li>Sit at the same level as the other person, not standing over them.</li>
+          <li>Sit angled toward the person rather than directly opposite — it feels less like an interview.</li>
+          <li>Avoid fidgeting — it can look uncomfortable, nervous, or bored.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <svg class="deco" style="right:150px;bottom:118px;width:184px;height:184px;color:var(--royal);opacity:.82;" aria-hidden="true"><use href="#i-eye"/></svg>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">10</div></div>
+</section>
+
+<!-- ============ 12 · VISUAL ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">07 · Visual</div>
+    <h2 class="s-title reveal d1">Visual Communication</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Uses visual elements — animated GIFs, screenshots, videos, pie charts, infographics, and slide decks — to communicate ideas quickly.</p>
+    <div class="cols reveal d2" style="grid-template-columns:1fr 1fr 0.95fr;gap:26px;margin-top:32px;align-items:start;">
+      <div class="card"><div class="idx">EXAMPLES ON ENGINEERING PROJECTS</div><ul class="ul" style="margin-top:14px;">
+        <li>Circuit diagrams and CAD drawings</li>
+        <li>Flowcharts for processes or algorithms</li>
+        <li>Graphs and charts for test data</li>
+        <li>Screenshots and annotated photos for bug reports</li>
+      </ul></div>
+      <div class="panel"><div class="plabel">Tips</div><ul class="ul" style="margin-top:14px;">
+        <li>Use colorful visuals — people respond to them</li>
+        <li>Use white space between images for a clean look</li>
+        <li>Learn when and how to use visuals effectively</li>
+      </ul></div>
+      <div class="stat royal" style="min-height:100%;justify-content:flex-start;"><svg class="ico"><use href="#i-chart"/></svg><div class="k" style="margin-top:0;">A picture speaks fast</div><div class="d">In a technical field, visuals often communicate complex data faster than paragraphs of text — a well-labeled chart can replace a page of explanation. Never let a visual replace clear labeling — a confusing chart is worse than none at all.</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">11</div></div>
+</section>
+
+<!-- ============ 13 · WRITTEN ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">07 · Written</div>
+    <h2 class="s-title reveal d1">Written Communication</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">The sending of messages, orders, or instructions through letters, circulars, manuals, reports, memos, and bulletins — a formal, less-flexible channel.</p>
+    <div class="cols reveal d2" style="grid-template-columns:1fr 1fr 0.95fr;gap:26px;margin-top:32px;align-items:start;">
+      <div class="card"><div class="idx">EXAMPLES ON ENGINEERING PROJECTS</div><ul class="ul" style="margin-top:14px;">
+        <li>Project and lab reports</li>
+        <li>Emails to clients and vendors</li>
+        <li>Technical documentation and manuals</li>
+        <li>Meeting minutes and status memos</li>
+      </ul></div>
+      <div class="panel"><div class="plabel">Tips</div><ul class="ul" style="margin-top:14px;">
+        <li>Keep the message clear and connect each sentence to the last</li>
+        <li>Keep your writing style simple and down to earth</li>
+        <li>Write legibly, or format cleanly, so it's easy to read</li>
+      </ul></div>
+      <div class="stat ink" style="min-height:100%;justify-content:flex-start;"><svg class="ico"><use href="#i-doc"/></svg><div class="k" style="margin-top:0;">Written is permanent</div><div class="d">A written record stays — it can be referenced, forwarded, and reviewed later, so accuracy and clarity matter even more. For a job application, written communication is often a client's or employer's first impression of you.</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">12</div></div>
+</section>
+
+<!-- ============ 14 · WORKPLACE ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">08 · At Work</div>
+    <h2 class="s-title reveal d1">Communication in the Engineering Workplace</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">The four types come together in these everyday moments.</p>
+    <div class="stat-grid reveal d2" style="grid-template-columns:repeat(4,1fr);margin-top:50px;">
+      <div class="stat royal"><svg class="ico"><use href="#i-people"/></svg><div class="num">01</div><div class="k">Client Meetings</div><div class="d">Explaining technical concepts in plain language and reading the room's reactions.</div></div>
+      <div class="stat ink"><svg class="ico"><use href="#i-doc"/></svg><div class="num">02</div><div class="k">Technical Reports</div><div class="d">Documenting design decisions, test results, and project status clearly.</div></div>
+      <div class="stat grey"><svg class="ico"><use href="#i-screen"/></svg><div class="num">03</div><div class="k">Presentations</div><div class="d">Combining visuals, verbal delivery, and confident body language.</div></div>
+      <div class="stat mute"><svg class="ico"><use href="#i-speech"/></svg><div class="num">04</div><div class="k">Team Stand-ups</div><div class="d">Quick, focused verbal updates — what's done, what's next, what's blocked.</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">13</div></div>
+</section>
+
+<!-- ============ 15 · ACTIVITY ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">09 · Activity · Work in pairs</div>
+    <h2 class="s-title reveal d1">The 60-Second Pitch</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">Objective: practice clear delivery, confident pauses, and strong body language — together.</p>
+    <div class="cols reveal d2" style="grid-template-columns:1.35fr 1fr;margin-top:32px;align-items:start;">
+      <div>
+        <div class="idx" style="font-size:19px;font-weight:600;letter-spacing:.16em;color:var(--royal);">HOW TO RUN IT (WORK IN PAIRS)</div>
+        <div class="tl" style="margin-top:16px;">
+          <div class="row"><div class="time"><b>1</b></div><div class="body"><h4>Prepare · 1 min</h4><p>Pick one idea, concept or any subject you know well. Jot down 2–3 key points — no full script.</p></div></div>
+          <div class="row"><div class="time"><b>2</b></div><div class="body"><h4>Pitch · 60 sec</h4><p>Explain it to your group as if they were a client. No "uh," "um," or "like" — use a pause instead.</p></div></div>
+          <div class="row"><div class="time"><b>3</b></div><div class="body"><h4>Observe</h4><p>Your group uses the checklist on the right while you speak, without interrupting.</p></div></div>
+          <div class="row"><div class="time"><b>4</b></div><div class="body"><h4>Swap &amp; Repeat</h4><p>Switch roles and run it again — everyone pitches once.</p></div></div>
+          <div class="row"><div class="time"><b>5</b></div><div class="body"><h4>Debrief · 2 min</h4><p>Share one thing that felt hard and one thing your partner did well.</p></div></div>
+        </div>
+      </div>
+      <div class="panel" style="height:100%;background:var(--royal);">
+        <div class="plabel" style="color:rgba(255,255,255,.85);">Observer Checklist</div>
+        <ul class="ul tick tick-white" style="margin-top:20px;">
+          <li style="color:#fff;">Filler words used (count them)</li>
+          <li style="color:#fff;">Pauses instead of fillers</li>
+          <li style="color:#fff;">Eye contact maintained</li>
+          <li style="color:#fff;">Open, relaxed body position</li>
+          <li style="color:#fff;">Tone changed for key points</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <svg class="deco" style="right:150px;bottom:112px;width:150px;height:150px;color:var(--royal);opacity:.82;" aria-hidden="true"><use href="#i-timer"/></svg>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">14</div></div>
+</section>
+
+<!-- ============ 16 · CONCLUSION ============ -->
+<section class="slide">
+  <div class="brandmark"><img src="assets/vtu-logo.png" alt="VTU"><div class="bm-txt">Communication Skills<span>VTU · Belagavi</span></div></div>
+  <div class="pad">
+    <div class="eyebrow reveal d1">In Summary</div>
+    <h2 class="s-title reveal d1">Conclusion</h2>
+    <div class="dash reveal d1"></div>
+    <p class="lede reveal d1">We need communication in every step of our lives — without it, life would not be possible. For growing good business and engineering skills, communication is essential.</p>
+    <div class="cols reveal d2" style="grid-template-columns:1.25fr 1fr;gap:44px;margin-top:30px;align-items:start;">
+      <ul class="ul" style="margin-top:0;">
+        <li>Good communication skills build healthy relationships with customers and teams.</li>
+        <li>It helps grow business and increases profit.</li>
+        <li>Four types — verbal, non-verbal, visual, written — work together.</li>
+        <li>Small habits (tone, pauses, eye contact, clarity) create big impact.</li>
+        <li>Practice is what turns theory into a real skill — like today's pitch activity.</li>
+      </ul>
+      <div>
+        <div class="closing">
+          <b>Communication is a continuous, two-way process.</b>
+          <span>Practice it deliberately — in speech, body language, visuals, and writing.</span>
+        </div>
+        <div class="srcline">Source: Parab, S.R., IRJET Vol. 9(6), June 2022, pp. 2025–2027</div>
+      </div>
+    </div>
+  </div>
+  <svg class="deco" style="right:300px;bottom:150px;width:156px;height:156px;color:var(--royal);opacity:.85;" aria-hidden="true"><use href="#i-check"/></svg>
+  <div class="foot"><div class="fdash">Communication Skills for Engineers</div><div class="pnum">15</div></div>
+</section>
+
+</main>
+</div>
+
+<!-- nav + progress -->
+<div class="deck-controls">
+  <button id="prevBtn" aria-label="Previous slide">‹</button>
+  <span class="count" id="counter">1 / 16</span>
+  <button id="nextBtn" aria-label="Next slide">›</button>
+</div>
+
+<!-- inline edit affordance -->
+<div class="edit-hotzone" title="Edit mode (E)"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">✏️</button>
+
+<script>
+/* ===========================================
+   SLIDE CONTROLLER — fixed 16:9 stage
+   =========================================== */
+class SlidePresentation{
+  constructor(){
+    this.slides=[...document.querySelectorAll('.slide')];
+    this.i=0;
+    this.stage=document.getElementById('deckStage');
+    this.counter=document.getElementById('counter');
+    this.bar=document.getElementById('progressBar');
+    this.scaleStage();this.keys();this.touch();this.wheel();
+    document.getElementById('nextBtn').onclick=()=>this.go(this.i+1);
+    document.getElementById('prevBtn').onclick=()=>this.go(this.i-1);
+    window.addEventListener('resize',()=>this.scaleStage());
+    this.show(0);
+  }
+  scaleStage(){
+    const f=Math.min(innerWidth/1920,innerHeight/1080);
+    const x=(innerWidth-1920*f)/2,y=(innerHeight-1080*f)/2;
+    this.stage.style.transform=`translate(${x}px,${y}px) scale(${f})`;
+  }
+  show(n){
+    this.i=Math.max(0,Math.min(n,this.slides.length-1));
+    this.slides.forEach((s,k)=>{s.classList.toggle('active',k===this.i);s.classList.toggle('visible',k===this.i);});
+    this.counter.textContent=`${this.i+1} / ${this.slides.length}`;
+    this.bar.style.width=((this.i+1)/this.slides.length*100)+'%';
+  }
+  go(n){this.show(n);}
+  keys(){
+    addEventListener('keydown',e=>{
+      if(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true')return;
+      if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();this.go(this.i+1);}
+      if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.go(this.i-1);}
+      if(e.key==='Home')this.go(0);
+      if(e.key==='End')this.go(this.slides.length-1);
+    });
+  }
+  touch(){
+    let x0=null;
+    addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+    addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)this.go(dx<0?this.i+1:this.i-1);x0=null;},{passive:true});
+  }
+  wheel(){
+    let lock=false;
+    addEventListener('wheel',e=>{if(lock)return;if(Math.abs(e.deltaY)<24)return;lock=true;this.go(this.i+(e.deltaY>0?1:-1));setTimeout(()=>lock=false,650);},{passive:true});
+  }
+}
+const deck=new SlidePresentation();
+
+/* ===========================================
+   INLINE EDIT (hover corner or press E)
+   =========================================== */
+const editToggle=document.getElementById('editToggle');
+const hotzone=document.querySelector('.edit-hotzone');
+const editor={isActive:false,toggle(){
+  this.isActive=!this.isActive;
+  editToggle.classList.toggle('active',this.isActive);
+  document.querySelectorAll('.slide h1,.slide h2,.slide h4,.slide p,.slide li,.slide q,.slide .k,.slide .d,.slide .idx,.slide .plabel,.slide .lede,.slide b,.slide span,.slide .cvt,.slide .closing')
+    .forEach(el=>el.setAttribute('contenteditable',this.isActive));
+  editToggle.textContent=this.isActive?'✓':'✏️';
+}};
+editToggle.addEventListener('click',()=>editor.toggle());
+let hideT=null;
+hotzone.addEventListener('mouseenter',()=>{clearTimeout(hideT);editToggle.classList.add('show');});
+hotzone.addEventListener('mouseleave',()=>{hideT=setTimeout(()=>{if(!editor.isActive)editToggle.classList.remove('show');},400);});
+editToggle.addEventListener('mouseenter',()=>clearTimeout(hideT));
+editToggle.addEventListener('mouseleave',()=>{hideT=setTimeout(()=>{if(!editor.isActive)editToggle.classList.remove('show');},400);});
+hotzone.addEventListener('click',()=>editor.toggle());
+addEventListener('keydown',e=>{if((e.key==='e'||e.key==='E')&&e.target.getAttribute('contenteditable')!=='true')editor.toggle();});
+</script>
+</body>
+</html>
